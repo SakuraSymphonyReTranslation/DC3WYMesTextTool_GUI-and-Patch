@@ -1,0 +1,5 @@
+E:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy/CMakeFiles/detours.dir
+E:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy/CMakeFiles/DC4Patch.dir
+E:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy/CMakeFiles/DC4Launcher.dir
+E:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy/CMakeFiles/ALL_BUILD.dir
+E:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,3 @@
+[submodule "DC3WYPatch a/Detours"]
+	path = DC3WYPatch a/Detours
+	url = https://github.com/microsoft/Detours.git
