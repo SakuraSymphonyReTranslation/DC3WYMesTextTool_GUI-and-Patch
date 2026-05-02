@@ -1,0 +1,10 @@
+^E:\GAMES\DC3WY\DC3WYMESTEXTTOOL_GUI - COPY BERANTAKAN\DC3WYPATCH A\BUILD_DC3WY\CMAKEFILES\2204972590FF5DFAE59089A92B4A18CB\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SE:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a" "-BE:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "E:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy/DC3WYPatch.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

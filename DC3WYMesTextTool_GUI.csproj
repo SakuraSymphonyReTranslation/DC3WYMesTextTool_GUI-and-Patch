@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DC3WYMesTextTool_GUI</RootNamespace>
+    <StartupObject>DC3WYMesTextTool_GUI.Program</StartupObject>
+    <AssemblyName>DC3WYMesTextTool_GUI</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DC3WYPatch a\**" />
+    <EmbeddedResource Remove="DC3WYPatch a\**" />
+    <None Remove="DC3WYPatch a\**" />
+  </ItemGroup>
+
+</Project>

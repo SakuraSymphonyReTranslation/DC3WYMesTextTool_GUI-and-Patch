@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\build_dc3wy_win32\CMakeFiles\fbbb045f22e0e3e931192ec0e07a5b16\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{F54AE68B-0810-37AD-A313-9913BCE451CD}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

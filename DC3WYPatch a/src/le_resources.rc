@@ -1,0 +1,8 @@
+// le_resources.rc
+#include <windows.h>
+
+101 RCDATA "le_bin\\\\LEProc.exe"
+102 RCDATA "le_bin\\\\LocaleEmulator.dll"
+103 RCDATA "le_bin\\\\LoaderDll.dll"
+104 RCDATA "le_bin\\\\LECommonLibrary.dll"
+105 RCDATA "le_bin\\\\LEConfig.xml"
