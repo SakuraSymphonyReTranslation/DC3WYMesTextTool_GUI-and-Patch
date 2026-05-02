@@ -34,6 +34,9 @@ Ready-to-use release output:
 
 To use this patch correctly, launch the game using:
 
+For example - `H:\Games\DC3WY` is your game directory
+put - `DC3WYMesTextTool_GUI and Patch` or somewhere else
+
 - `H:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\build\Released\DC3WYLauncher.exe`
 
 Running the game directly from `DC3WY.EXE` may not load the patch correctly.
@@ -87,6 +90,9 @@ Steps:
 ## CLI Tutorial
 
 Open terminal in:
+
+For example - `H:\Games\DC3WY` is your game directory
+put - `DC3WYMesTextTool_GUI and Patch` or somewhere else
 
 - `H:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\bin\Release\net8.0-windows`
 
@@ -157,13 +163,3 @@ If original MES file is missing, that JSON file is skipped.
 - Final ready release folder: `H:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\build\Released`
 - Release package: `H:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\build\Released\Released_patch.rar`
 - Tool package: `H:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\bin\Release\net8.0-windows\DC3WYMesTextTool_GUI.rar`
-
-## Release Description (v1.0.0)
-
-Initial public release.
-Includes:
-Released_patch.rar
-DC3WYMesTextTool_GUI.rar
-Important: Use the custom DC3WYLauncher from build/Released to run the patch properly.
-
-The file doesn't contain any viruses; if your antivirus somehow detect it as anomaly.. it's just a false alarm. Trust me, I made this patch for everyone who wants to create or modify the Da Capo 3 With You patch. I have no intention of harming anyone.
