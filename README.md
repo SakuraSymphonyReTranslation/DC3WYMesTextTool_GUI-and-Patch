@@ -133,7 +133,7 @@ If output folder is omitted, defaults to `mes_folder\json_output`.
 ### 4) Batch Import (Folder) (JSON -> MES)
 
 ```powershell
-.\DC3WYMesTextTool_GUI.exe batch-import "H:\path\json_folder" "H:\path\mes_folder" "H:\path\mes_output" -w 67
+.\DC3WYMesTextTool_GUI.exe batch-import "H:\path\json_folder" "H:\path\mes_folder" "H:\path\mes_output" -w 60
 ```
 
 Arguments:
@@ -141,7 +141,7 @@ Arguments:
 - `json_folder`: translated `.json` files
 - `mes_folder`: original `.mes` files used as base
 - `mes_output`: output folder for rebuilt `.mes`
-- `-w`: wrap width (optional, default `67`)
+- `-w`: wrap width (optional, default `60`) if 60 isn't enough you can change its value to fit textbox.
 
 Matching is done by filename:
 
