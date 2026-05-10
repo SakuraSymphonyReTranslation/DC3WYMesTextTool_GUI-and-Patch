@@ -1,6 +1,6 @@
-^E:\GAMES\DC3WY\DC3WYMESTEXTTOOL_GUI - COPY BERANTAKAN\DC3WYPATCH A\CMAKELISTS.TXT
+^E:\GAMES\DC3WY\DC3WYMESTEXTTOOL_GUI AND PATCH\DC3WYPATCH A\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" "-SE:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a" "-BE:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy" --check-stamp-file "E:/Games/DC3WY/DC3WYMesTextTool_GUI - Copy berantakan/DC3WYPatch a/build_dc3wy/CMakeFiles/generate.stamp"
+"C:\Program Files\CMake\bin\cmake.exe" "-SE:/Games/DC3WY/DC3WYMesTextTool_GUI and Patch/DC3WYPatch a" "-BE:/Games/DC3WY/DC3WYMesTextTool_GUI and Patch/DC3WYPatch a/build_dc3wy" --check-stamp-file "E:/Games/DC3WY/DC3WYMesTextTool_GUI and Patch/DC3WYPatch a/build_dc3wy/CMakeFiles/generate.stamp"
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
