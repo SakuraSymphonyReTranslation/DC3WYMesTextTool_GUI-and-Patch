@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\Detours\src\detours.cpp">
+    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\Detours\src\detours.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\Detours\src\modules.cpp">
+    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\Detours\src\modules.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\Detours\src\disasm.cpp">
+    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\Detours\src\disasm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\Detours\src\image.cpp">
+    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\Detours\src\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\Detours\src\creatwth.cpp">
+    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\Detours\src\creatwth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\Detours\src\disolx86.cpp">
+    <ClCompile Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\Detours\src\disolx86.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI - Copy berantakan\DC3WYPatch a\CMakeLists.txt" />
+    <CustomBuild Include="E:\Games\DC3WY\DC3WYMesTextTool_GUI and Patch\DC3WYPatch a\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{85C8E52A-35E6-3256-99B8-04728E753BA0}</UniqueIdentifier>
+      <UniqueIdentifier>{A442BC04-C5C8-3B66-AF63-594BDA41AFE6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
