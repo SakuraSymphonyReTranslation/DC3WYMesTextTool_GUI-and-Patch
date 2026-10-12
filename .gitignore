@@ -1,0 +1,19 @@
+# Local environments, editor state, and generated caches
+**/.venv/
+**/__pycache__/
+**/.vs/
+**/obj/
+**/bin/Debug/
+*.user
+*.suo
+*.log
+*.pdb
+*.obj
+*.tlog
+*.cache
+*.tmp
+*.bak
+
+# Native build intermediates; ready-to-use files remain in build/Released.
+/DC3WYPatch a/build_dc3wy_win32/
+/DC3WYPatch a/build/detours.lib

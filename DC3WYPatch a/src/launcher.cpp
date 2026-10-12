@@ -78,25 +78,13 @@ static void EnsureDirectoryTreeW(const wchar_t *path) {
 }
 
 // ---------------------------------------------------------------------------
-// DC3WY: ensure AdvData/Savegame and system saved-games folders exist
+// DC3WY saves are redirected by the patch DLL. The launcher only prepares
+// the game-local destination and must not create folders in Windows Saved Games.
 // ---------------------------------------------------------------------------
 static void EnsureSaveLayoutForDC3WY(const char *currentDir) {
   std::wstring gameDir = AnsiToWide(currentDir);
   if (!gameDir.empty()) {
     EnsureDirectoryTreeW((gameDir + L"\\AdvData\\Savegame").c_str());
-  }
-
-  PWSTR savedGames = NULL;
-  if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_SavedGames, KF_FLAG_DEFAULT,
-                                     NULL, &savedGames)) &&
-      savedGames) {
-    EnsureDirectoryTreeW(
-        (std::wstring(savedGames) + L"\\サーカス\\D．C．Ⅲ W．Y．").c_str());
-    EnsureDirectoryTreeW(
-        (std::wstring(savedGames) + L"\\サーカス\\D.C.III W.Y.").c_str());
-    EnsureDirectoryTreeW(
-        (std::wstring(savedGames) + L"\\Circus\\D.C.III W.Y.").c_str());
-    CoTaskMemFree(savedGames);
   }
 }
 
@@ -164,12 +152,13 @@ static DWORD FindProcessByName(const char *processName) {
 // Poll until a process with the given name appears (or timeout expires)
 // ---------------------------------------------------------------------------
 static DWORD WaitForProcessByName(const char *processName, DWORD timeoutMs) {
+  constexpr DWORD pollIntervalMs = 25;
   DWORD elapsed = 0;
   while (elapsed < timeoutMs) {
     DWORD pid = FindProcessByName(processName);
     if (pid != 0) return pid;
-    Sleep(200);
-    elapsed += 200;
+    Sleep(pollIntervalMs);
+    elapsed += pollIntervalMs;
   }
   return 0;
 }
@@ -296,19 +285,9 @@ static bool ExtractResourceToFile(int resourceId, const char* outPath) {
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int) {
 
   // --- Game identity ---
-#if defined(GAME_DC3WY)
   const char *launcherTitle = "DC3WY Patch Launcher";
   const char *gameExeName   = "DC3WY.EXE";
   const char *patchDllName  = "DC3WYPatch.dll";
-#elif defined(GAME_DC4PH)
-  const char *launcherTitle = "DC4PH Patch Launcher";
-  const char *gameExeName   = "DC4PHDL.EXE";
-  const char *patchDllName  = "DC4PHPatch.dll";
-#else
-  const char *launcherTitle = "DC3PP Patch Launcher";
-  const char *gameExeName   = "DC3PP.EXE";
-  const char *patchDllName  = "DC3PPPatch.dll";
-#endif
 
   // --- Resolve launcher directory ---
   char currentDir[MAX_PATH] = {0};
@@ -319,9 +298,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int) {
   }
 
   // --- DC3WY: ensure AdvData/Savegame exists ---
-#if defined(GAME_DC3WY)
   EnsureSaveLayoutForDC3WY(currentDir);
-#endif
 
   // --- Build full paths ---
   char exePath[MAX_PATH]  = {0};
@@ -350,7 +327,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int) {
 // ===========================================================================
 // DC3WY — Built-in Locale Emulator path (via embedded resources)
 // ===========================================================================
-#if defined(GAME_DC3WY)
   if (!IsRunningUnderWine()) {
     char tempPath[MAX_PATH] = {0};
     GetTempPathA(MAX_PATH, tempPath);
@@ -399,7 +375,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int) {
 
       if (ShellExecuteExA(&sei)) {
         if (sei.hProcess) CloseHandle(sei.hProcess);
-        Sleep(600);
 
         DWORD gamePid = WaitForProcessByName(gameExeName, 15000);
         if (gamePid != 0) {
@@ -430,11 +405,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int) {
       }
     }
   }
-#endif // GAME_DC3WY
 
 // ===========================================================================
 // Fallback: plain CreateProcess + DLL injection
-// (also used for DC3PP / DC4PH, and for DC3WY under Wine or when LE absent)
+// Used for DC3WY under Wine or when Locale Emulator is unavailable.
 // ===========================================================================
 
   char commandLine[MAX_PATH * 2] = {0};

@@ -9,18 +9,18 @@ namespace DC3WYMesTextTool_GUI
     public partial class MainForm : Form
     {
         private MesToolProcessor _processor;
-        private TextBox _logBox;
+        private TextBox _logBox = null!;
         
         // Single File Controls
-        private TextBox _txtSingleInput;
-        private TextBox _txtSingleOutput;
-        private NumericUpDown _numSingleWrap;
+        private TextBox _txtSingleInput = null!;
+        private TextBox _txtSingleOutput = null!;
+        private NumericUpDown _numSingleWrap = null!;
 
         // Batch Controls
-        private TextBox _txtBatchInput;
-        private TextBox _txtBatchOutput;
-        private TextBox _txtBatchMesInput; // For Import: JSON folder is input, but we need original MES folder too
-        private NumericUpDown _numBatchWrap;
+        private TextBox _txtBatchInput = null!;
+        private TextBox _txtBatchOutput = null!;
+        private TextBox _txtBatchMesInput = null!; // For Import: JSON folder is input, but we need original MES folder too
+        private NumericUpDown _numBatchWrap = null!;
 
         public MainForm()
         {
@@ -41,7 +41,7 @@ namespace DC3WYMesTextTool_GUI
 
         private void InitializeComponent()
         {
-            this.Text = "DC3WY MES Text Tool GUI";
+            this.Text = "Da Capo 3 With You - MES Text Tool";
             this.Size = new Size(600, 500);
             
             var tabControl = new TabControl { Dock = DockStyle.Top, Height = 300 };
@@ -54,13 +54,14 @@ namespace DC3WYMesTextTool_GUI
             var btnBrowseInput = new Button { Text = "...", Top = 20, Left = 480, Width = 30 };
             btnBrowseInput.Click += (s, e) => BrowseFile(_txtSingleInput);
 
-            var lblOutput = new Label { Text = "Output JSON/MES:", Top = 50, Left = 10, Width = 100 };
+            var lblOutput = new Label { Text = "Output:", Top = 50, Left = 10, Width = 100 };
             _txtSingleOutput = new TextBox { Top = 50, Left = 120, Width = 350 };
             var btnBrowseOutput = new Button { Text = "...", Top = 50, Left = 480, Width = 30 };
             btnBrowseOutput.Click += (s, e) => BrowseSaveFile(_txtSingleOutput);
 
-            var lblWrap = new Label { Text = "Word Wrap Width:", Top = 90, Left = 10, Width = 100 };
-            _numSingleWrap = new NumericUpDown { Top = 90, Left = 120, Width = 60, Minimum = 10, Maximum = 100, Value = 67 }; 
+            var lblWrap = new Label { Text = "Word Wrap:", Top = 90, Left = 10, Width = 100 };
+            _numSingleWrap = new NumericUpDown { Top = 90, Left = 120, Width = 60, Minimum = TextFormatter.MinimumWidth, Maximum = TextFormatter.MaximumWidth, Value = TextFormatter.DefaultWidth };
+            var lblSingleLayout = new Label { Text = "46 columns / 4 lines recommended", Top = 92, Left = 190, AutoSize = true };
 
             var btnExport = new Button { Text = "Export (MES -> JSON)", Top = 130, Left = 20, Width = 150 };
             btnExport.Click += (s, e) => RunSingleExport();
@@ -71,7 +72,7 @@ namespace DC3WYMesTextTool_GUI
             tabSingle.Controls.AddRange(new Control[] { 
                 lblInput, _txtSingleInput, btnBrowseInput, 
                 lblOutput, _txtSingleOutput, btnBrowseOutput,
-                lblWrap, _numSingleWrap,
+                lblWrap, _numSingleWrap, lblSingleLayout,
                 btnExport, btnImport 
             });
 
@@ -93,8 +94,9 @@ namespace DC3WYMesTextTool_GUI
             var btnBrowseBatchOutput = new Button { Text = "...", Top = 80, Left = 480, Width = 30 };
             btnBrowseBatchOutput.Click += (s, e) => BrowseFolder(_txtBatchOutput);
 
-            var lblBatchWrap = new Label { Text = "Word Wrap Width:", Top = 120, Left = 10, Width = 100 };
-            _numBatchWrap = new NumericUpDown { Top = 120, Left = 120, Width = 60, Minimum = 10, Maximum = 100, Value = 67 };
+            var lblBatchWrap = new Label { Text = "Word Wrap:", Top = 120, Left = 10, Width = 100 };
+            _numBatchWrap = new NumericUpDown { Top = 120, Left = 120, Width = 60, Minimum = TextFormatter.MinimumWidth, Maximum = TextFormatter.MaximumWidth, Value = TextFormatter.DefaultWidth };
+            var lblBatchLayout = new Label { Text = "46 columns / 4 lines recommended", Top = 122, Left = 190, AutoSize = true };
 
             var btnBatchExport = new Button { Text = "Batch Export (MES -> JSON)", Top = 160, Left = 20, Width = 180 };
             btnBatchExport.Click += (s, e) => RunBatchExport();
@@ -108,7 +110,7 @@ namespace DC3WYMesTextTool_GUI
                 lblBatchJson, _txtBatchInput, btnBrowseBatchInput,
                 lblBatchMes, _txtBatchMesInput, btnBrowseBatchMes,
                 lblBatchOutput, _txtBatchOutput, btnBrowseBatchOutput,
-                lblBatchWrap, _numBatchWrap,
+                lblBatchWrap, _numBatchWrap, lblBatchLayout,
                 btnBatchExport, btnBatchImport, lblHint
             });
 
@@ -186,7 +188,7 @@ namespace DC3WYMesTextTool_GUI
             }
 
             string output = _txtSingleOutput.Text;
-            if (string.IsNullOrWhiteSpace(output)) output = Path.Combine(Path.GetDirectoryName(originalMes), "new_" + Path.GetFileName(originalMes));
+            if (string.IsNullOrWhiteSpace(output)) output = Path.Combine(Path.GetDirectoryName(originalMes) ?? "", "new_" + Path.GetFileName(originalMes));
 
             int wrap = (int)_numSingleWrap.Value;
             
@@ -229,14 +231,14 @@ namespace DC3WYMesTextTool_GUI
             System.Threading.Tasks.Task.Run(() => _processor.BatchImport(jsonFolder, mesFolder, output, wrap));
         }
         
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        private void MainForm_DragEnter(object? sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
+            if (e.Data?.GetDataPresent(DataFormats.FileDrop) == true) e.Effect = DragDropEffects.Copy;
         }
 
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        private void MainForm_DragDrop(object? sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            string[]? files = e.Data?.GetData(DataFormats.FileDrop) as string[];
             if (files != null && files.Length > 0)
             {
                 if (Directory.Exists(files[0]))

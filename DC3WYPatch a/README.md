@@ -1,82 +1,53 @@
-# DC4 Indonesian Font Patch - Setup Guide
+# Da Capo 3 With You patch
 
-## What We Created
+This project builds only `DC3WYPatch.dll` and `DC3WYLauncher.exe` for the
+32-bit `DC3WY.EXE` game. The patch source is `src/dc3wypatch.cpp`.
 
-I've created a complete DC4 font patch source code at `d:\vns\DC4\DC4Patch\`:
+## Build
 
-```
-DC4Patch/
-├── CMakeLists.txt          # Build configuration
-├── src/
-│   └── dc4patch.cpp        # Main DLL source code
-├── Detours/                # Microsoft Detours library (not built)
-```
+Install Visual Studio 2022 with Desktop development with C++, a Windows SDK,
+and CMake. Clone the repository with `--recurse-submodules` (or run
+`git submodule update --init --recursive` from the repository root) to obtain
+Detours. Keep the Locale Emulator files in `src/le_bin`.
+Run `build_dc3wy_win32.bat` from any working directory.
 
-The patch hooks Windows APIs to enable Indonesian character display:
-- `GetGlyphOutlineA` - Replaces SJIS font with Unicode font
-- `CreateFileA` - Redirects to `id_Data/` folder for translations
-- `FindFirstFileA` - Supports file replacement
+Equivalent commands from this folder:
 
-## Problem: No C++ Compiler
-
-Your system doesn't have a C++ compiler installed:
-- ❌ Visual Studio - Not found
-- ❌ MinGW/GCC - Not found
-- ❌ Clang - Not found
-
-## Options to Proceed
-
-### Option 1: Install Visual Studio Build Tools (Recommended)
-Download and install from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
-
-After installing:
-1. Open "Developer Command Prompt for VS"
-2. Navigate to `d:\vns\DC4\DC4Patch`
-3. Run:
-```batch
-cd Detours\src
-nmake
-cd ..\..
-mkdir build && cd build
-cmake .. -G "Visual Studio 17 2022" -A Win32
-cmake --build . --config Release
-```
-4. Copy `build\Release\dinput8.dll` to `d:\vns\DC4\`
-
-### Option 2: Install MinGW-w64
-Download from: https://www.mingw-w64.org/downloads/
-
-Then build with:
-```batch
-mkdir build && cd build
-cmake .. -G "MinGW Makefiles"
-cmake --build .
+```powershell
+cmake -S . -B build_dc3wy_win32 -G "Visual Studio 17 2022" -A Win32
+cmake --build build_dc3wy_win32 --config Release --target DC3WYPatch DC3WYLauncher
 ```
 
-### Option 3: Contact the CircusEnginePatchs Author
-You could reach out to the DC3WY patch author (cokkeijigen) on GitHub to request a DC4 version:
-https://github.com/cokkeijigen/CircusEnginePatchs
+The batch script copies the compiled DLL and launcher into `build/Released`.
+It preserves existing INI settings. The launcher embeds Locale Emulator.
 
-### Option 4: Simple Workaround with Locale Emulator
-For Indonesian (Latin only), you might be able to use:
-1. Install [Locale Emulator](https://github.com/xupefei/Locale-Emulator)
-2. Run DC4.EXE with Japanese locale
-3. The Latin characters might display with certain fonts
+## Use
 
----
+`<GAME_DIR>` means the player's chosen installation folder containing
+`DC3WY.EXE` and `AdvData`; replace this placeholder with your own path.
+Copy the contents of `build/Released` into `<GAME_DIR>`, then
+run `<GAME_DIR>\DC3WYLauncher.exe`. Keep your existing `DC3WYPatch.ini`
+when updating. Press F11 in-game to open DC3WY Patch Settings.
 
-## Once You Have the DLL
+The approved configuration uses `DialogueLineSpacing=-10` and
+`BacklogLineSpacing=-10`, giving normal body text a 24px line pitch.
+Native ruby and large-font text retain their native spacing. The name-icon
+fallback supports translated DC3WY character names and underscore aliases.
 
-After building `dinput8.dll`:
+For MES/JSON export and import, use `../bin/Release/net8.0-windows/DC3WYMesTextTool_GUI.exe`.
+The converter defaults to 46 half-width columns and produces layout reports.
 
-1. Copy `dinput8.dll` to `d:\vns\DC4\` (same folder as DC4.EXE)
-2. Create folder `d:\vns\DC4\id_Data\`
-3. Place your translated `.mes` files in `id_Data/`
-4. Run DC4.EXE normally - the patch loads automatically
+## Verification
 
-## Testing
+With Python packages `pefile`, `capstone` and `unicorn` installed:
 
-To verify the patch is working:
-- Check if the window title changes
-- Try displaying Indonesian text in-game
-- Use right-click menu to change font if needed
+```powershell
+python tools/verify_line_spacing.py "<GAME_DIR>/DC3WY.EXE" "build_dc3wy_win32/Release/DC3WYPatch.dll"
+python tools/verify_backlog.py "<GAME_DIR>/DC3WY.EXE" "build_dc3wy_win32/Release/DC3WYPatch.dll" "<NAME_AUDIT_JSON>"
+```
+
+`<NAME_AUDIT_JSON>` is a translation-specific audit file with `names` and
+`length_mismatches` fields, supplied separately for the backlog check.
+These checks execute the compiled x86 hooks against the original DC3WY code.
+They check body spacing, register/stack preservation and translated name icons.
+Detours and Locale Emulator remain third-party dependencies with their own licenses.

@@ -9,6 +9,7 @@
     <RootNamespace>DC3WYMesTextTool_GUI</RootNamespace>
     <StartupObject>DC3WYMesTextTool_GUI.Program</StartupObject>
     <AssemblyName>DC3WYMesTextTool_GUI</AssemblyName>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

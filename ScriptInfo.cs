@@ -1,7 +1,7 @@
 namespace DC3WYMesTextTool;
 
 /// <summary>
-/// Script configuration for different Circus engine games.
+/// Script configuration for Da Capo 3 With You.
 /// Based on MesTextTool's script_info.cpp
 /// </summary>
 public class ScriptInfo
@@ -31,23 +31,6 @@ public class ScriptInfo
     }
     
     /// <summary>
-    /// D.C.III Platinum Partner configuration
-    /// </summary>
-    public static readonly ScriptInfo DC3PP = new()
-    {
-        Name = "dc3pp",
-        Version = 0x9872,
-        OffsetType = OffsetType.Offset2,
-        Uint8x2 = (0x00, 0x2A),
-        Uint8Str = (0x2B, 0x32),
-        String = (0x33, 0x4E),
-        EncStr = (0x4F, 0x51),
-        Uint16x4 = (0x52, 0xFF),
-        EncryptionKey = 0x20,
-        OutputOpcodes = new byte[] { 0x45 }
-    };
-
-    /// <summary>
     /// D.C.III With You configuration
     /// Based on MesTextTool script_info.cpp:
     /// { "dc3wy", offset2, 0xA09F, {0x00,0x38}, {0x39,0x41}, {0x42,0x5F}, {0x60,0x63}, {0x64,0xFF}, 0x20, {0x55} }
@@ -67,44 +50,9 @@ public class ScriptInfo
     };
 
     /// <summary>
-    /// D.C.4 ~Da Capo 4~ configuration
-    /// Note: DC4 uses Offset2 (labelCount * 6 + 4) per original C++ MesTextTool
+    /// Supported script configuration
     /// </summary>
-    public static readonly ScriptInfo DC4 = new()
-    {
-        Name = "dc4",
-        Version = 0xAAB6,
-        OffsetType = OffsetType.Offset2,  // FIXED: Was incorrectly set to Offset1
-        Uint8x2 = (0x00, 0x3A),
-        Uint8Str = (0x3B, 0x47),
-        String = (0x48, 0x68),
-        EncStr = (0x69, 0x6D),
-        Uint16x4 = (0x6E, 0xFF),
-        EncryptionKey = 0x20,
-        OutputOpcodes = new byte[] { 0x5D }
-    };
-    
-    /// <summary>
-    /// D.C.4 Plus Harmony configuration
-    /// </summary>
-    public static readonly ScriptInfo DC4PH = new()
-    {
-        Name = "dc4ph",
-        Version = 0xABB6,
-        OffsetType = OffsetType.Offset2,
-        Uint8x2 = (0x00, 0x3A),
-        Uint8Str = (0x3B, 0x47),
-        String = (0x48, 0x68),
-        EncStr = (0x69, 0x6D),
-        Uint16x4 = (0x6E, 0xFF),
-        EncryptionKey = 0x20,
-        OutputOpcodes = new byte[] { 0x5D }
-    };
-    
-    /// <summary>
-    /// All known script configurations
-    /// </summary>
-    public static readonly ScriptInfo[] AllInfos = { DC3WY, DC3PP, DC4, DC4PH };
+    public static readonly ScriptInfo[] AllInfos = { DC3WY };
     
     /// <summary>
     /// Query script info by name
@@ -120,44 +68,20 @@ public class ScriptInfo
     /// </summary>
     public static ScriptInfo? QueryFromData(byte[] data)
     {
-        if (data.Length < 8)
+        if (data.Length < 8 || BitConverter.ToInt32(data, 4) != 3)
             return null;
-            
+
         int labelCount = BitConverter.ToInt32(data, 0);
-        
-        // Try offset2 first (DC2DM/DC4 style)
-        int offset2 = labelCount * 6 + 4;
-        if (data.Length > offset2 + 2)
-        {
-            ushort version2 = BitConverter.ToUInt16(data, offset2);
-            // Check magic at offset 4 (should be 0x03)
-            if (data.Length > 4 && BitConverter.ToInt32(data, 4) == 0x03)
-            {
-                var info = AllInfos.FirstOrDefault(i => 
-                    i.OffsetType == OffsetType.Offset2 && i.Version == version2);
-                if (info != null)
-                    return info;
-            }
-        }
-        
-        // Try offset1 (older games)
-        int offset1 = labelCount * 4 + 4;
-        if (data.Length > offset1 + 2)
-        {
-            ushort version1 = BitConverter.ToUInt16(data, offset1);
-            var info = AllInfos.FirstOrDefault(i => 
-                i.OffsetType == OffsetType.Offset1 && i.Version == version1);
-            if (info != null)
-                return info;
-        }
-        
-        // Default to DC3WY if can't detect
-        return DC3WY;
+        long offset = (long)labelCount * 6 + 4;
+        if (labelCount < 1 || offset + 3 > data.Length)
+            return null;
+
+        return BitConverter.ToUInt16(data, (int)offset) == DC3WY.Version
+            ? DC3WY : null;
     }
 }
 
 public enum OffsetType
 {
-    Offset1,  // head[0] * 4 + 4
-    Offset2   // head[0] * 6 + 4
+    Offset2 = 1 // head[0] * 6 + 4; retain the public enum value
 }

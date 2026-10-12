@@ -39,6 +39,8 @@ static class Program
                 "import" => HandleImport(processor, args.Skip(1).ToArray()),
                 "batch-export" => HandleBatchExport(processor, args.Skip(1).ToArray()),
                 "batch-import" => HandleBatchImport(processor, args.Skip(1).ToArray()),
+                "structure-json" => HandleStructureJson(processor, args.Skip(1).ToArray()),
+                "batch-structure-json" => HandleBatchStructureJson(processor, args.Skip(1).ToArray()),
                 _ when File.Exists(args[0]) => HandleDragDrop(processor, args[0]),
                 _ when Directory.Exists(args[0]) => HandleDragDropFolder(processor, args[0]),
                 _ => ShowError($"Unknown command: {command}")
@@ -57,7 +59,7 @@ static class Program
     {
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("╔════════════════════════════════════════════════╗");
-        Console.WriteLine("║       DC3WY MES Text Tool v1.2 (GUI+CLI)         ║");
+        Console.WriteLine("║       DC3WY MES Text Tool v1.3 (GUI+CLI)         ║");
         Console.WriteLine("║  Based on CircusEditor and MesTextTool         ║");
         Console.WriteLine("╚════════════════════════════════════════════════╝");
         Console.ResetColor();
@@ -79,16 +81,18 @@ static class Program
     
     static int HandleImport(MesToolProcessor processor, string[] args)
     {
+        var options = ParseImportOptions(args);
+        args = options.Paths;
         if (args.Length < 2)
         {
-            Console.WriteLine("Usage: DC3WYMesTextTool import <input.json> <original.mes> [output.mes]");
+            Console.WriteLine("Usage: DC3WYMesTextTool import <input.json> <original.mes> [output.mes] [-w <width>] (default: 46)");
             return 1;
         }
         
         string jsonPath = args[0];
         string originalMesPath = args[1];
         string outputPath = args.Length > 2 ? args[2] : Path.Combine(Path.GetDirectoryName(originalMesPath) ?? "", "output_" + Path.GetFileName(originalMesPath));
-        return processor.ImportJsonToMes(jsonPath, originalMesPath, outputPath);
+        return processor.ImportJsonToMes(jsonPath, originalMesPath, outputPath, options.Width);
     }
     
     static int HandleBatchExport(MesToolProcessor processor, string[] args)
@@ -106,6 +110,8 @@ static class Program
     
     static int HandleBatchImport(MesToolProcessor processor, string[] args)
     {
+        var options = ParseImportOptions(args);
+        args = options.Paths;
         if (args.Length < 2)
         {
             Console.WriteLine("Usage: DC3WYMesTextTool batch-import <json_folder> <mes_folder> [output_folder] [-w <wrap_width>]");
@@ -114,19 +120,54 @@ static class Program
         
         string jsonFolder = args[0];
         string mesFolder = args[1];
-        string outputFolder = args.Length > 2 && !args[2].StartsWith("-") ? args[2] : Path.Combine(mesFolder, "mes_output");
-        
-        int wrapWidth = 67;
-        for (int i = 0; i < args.Length - 1; i++)
+        string outputFolder = args.Length > 2 ? args[2] : Path.Combine(mesFolder, "mes_output");
+        return processor.BatchImport(jsonFolder, mesFolder, outputFolder, options.Width);
+    }
+
+    static (string[] Paths, int Width) ParseImportOptions(string[] args)
+    {
+        var paths = new System.Collections.Generic.List<string>();
+        int width = TextFormatter.DefaultWidth;
+        for (int i = 0; i < args.Length; i++)
         {
-            if (args[i] == "-w" && int.TryParse(args[i + 1], out int w))
+            if (args[i] == "-w")
             {
-                wrapWidth = w;
-                break;
+                if (++i >= args.Length || !int.TryParse(args[i], out width))
+                    throw new ArgumentException("-w requires a numeric wrap width.");
+            }
+            else
+            {
+                if (args[i].StartsWith('-')) throw new ArgumentException($"Unknown option: {args[i]}");
+                paths.Add(args[i]);
             }
         }
-        
-        return processor.BatchImport(jsonFolder, mesFolder, outputFolder, wrapWidth);
+        if (paths.Count > 3) throw new ArgumentException("Too many import paths.");
+        TextFormatter.ValidateWidth(width);
+        return (paths.ToArray(), width);
+    }
+
+    static int HandleStructureJson(MesToolProcessor processor, string[] args)
+    {
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: DC3WYMesTextTool structure-json <input.json> <japanese.mes> [output.json]");
+            return 1;
+        }
+
+        string outputPath = args.Length > 2 ? args[2] : args[0];
+        return processor.StructureJsonFile(args[0], args[1], outputPath);
+    }
+
+    static int HandleBatchStructureJson(MesToolProcessor processor, string[] args)
+    {
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: DC3WYMesTextTool batch-structure-json <json_folder> <japanese_mes_folder> [output_folder]");
+            return 1;
+        }
+
+        string outputFolder = args.Length > 2 ? args[2] : args[0];
+        return processor.BatchStructureJson(args[0], args[1], outputFolder);
     }
     
     static int HandleDragDrop(MesToolProcessor processor, string filePath)

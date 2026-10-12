@@ -1,4 +1,4 @@
 #include "resource.h"
 
 // Icon
-IDI_ICON1 ICON "..\\icon.ico"
+IDI_ICON1 ICON "..\\IconGroup103.ico"
