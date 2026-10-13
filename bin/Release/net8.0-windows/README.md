@@ -1,224 +1,175 @@
-# Da Capo 3 With You - MES Text Tool and Patch
+# DC3WY MES Text Tool — GUI dan CLI
 
-A Windows GUI/CLI for exporting **Da Capo 3 With You** scripts from MES to JSON
-and importing translations back into MES, together with the DC3WY patch and
-custom launcher. The converter accepts DC3WY MES version `0xA09F` only.
+**Bahasa Indonesia** | [English](Readme_en.md)
 
-## Download
+Importer/exporter untuk **D.C.III With You**.
 
-Download both packages from [GitHub Releases](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/releases/latest):
+Distribusi ini hanya mendukung **Da Capo 3 With You** (`dc3wy`, versi MES `0xA09F`). GUI, CLI, patch, dan launcher dikhususkan untuk game ini. Source utama patch: `DC3WYPatch a/src/dc3wypatch.cpp`.
 
-- [Released_patch.rar](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/releases/latest/download/Released_patch.rar): patch, launcher, configuration, and installation instructions.
-- [DC3WYMesTextTool_GUI.rar](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/releases/latest/download/DC3WYMesTextTool_GUI.rar): MES/JSON converter and its required companion files.
+## Unduhan dan folder instalasi
 
-The converter requires the **.NET 8 Desktop Runtime for Windows**. Keep its
-EXE, DLL, `.deps.json`, and `.runtimeconfig.json` together after extraction.
-The patch targets the 32-bit DC3WY game. Translation scripts are supplied separately.
+Unduh kedua paket terbaru dari [GitHub Releases](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/releases/latest):
 
-## Folder names used in this guide
+- **DC3WYMesTextTool_GUI.rar**: importer/exporter MES ↔ JSON, GUI dan CLI. Termasuk dokumentasi bahasa Indonesia dan Inggris.
+- **Released_patch.rar**: launcher, DLL patch, INI, executable referensi, dan berkas pendukung. Termasuk petunjuk instalasi dalam dua bahasa.
 
-- `<GAME_DIR>`: your chosen game installation folder, containing `DC3WY.EXE` and `AdvData`.
-- `<TOOL_DIR>`: the folder where you extracted `DC3WYMesTextTool_GUI.rar`. It can be anywhere.
-- `<REPO_DIR>`: the folder where you cloned or extracted this source repository.
+`<GAME_DIR>` berarti **folder utama instalasi game pilihan pemain**, yaitu folder yang berisi `DC3WY.EXE` dan `AdvData`. Ini placeholder dokumentasi: ganti dengan lokasi game Anda, tanpa tanda `<` dan `>`. Tidak ada drive atau lokasi instalasi wajib.
 
-These are documentation placeholders, not special GitHub variables or literal
-folder names. Replace them with your own paths; no particular drive letter is required.
+1. Tutup game dan simpan salinan berkas lama yang akan diganti, terutama executable dan `DC3WYPatch.ini`.
+2. Ekstrak isi `Released_patch.rar` langsung ke `<GAME_DIR>`, sehingga `DC3WYLauncher.exe`, `DC3WYPatch.dll`, dan `DC3WYPatch.ini` berada di sebelah `DC3WY.EXE`.
+3. Jika memperbarui patch, pertahankan INI yang sudah disesuaikan atau gabungkan pengaturan baru ke dalamnya.
+4. Jalankan **`<GAME_DIR>\DC3WYLauncher.exe`** dengan working directory `<GAME_DIR>`. Jika memakai shortcut, isi **Start in** dengan folder tersebut.
+5. Tekan **F11** untuk membuka **DC3WY Patch Settings** dan pilih bahasa. Berkas MES Indonesia ditempatkan di `<GAME_DIR>\id_Data\MES`; untuk bahasa Inggris, gunakan `<GAME_DIR>\eng_data\MES`.
 
-## Install and launch the patch
+```text
+<GAME_DIR>/
+├── DC3WY.EXE
+├── DC3WYLauncher.exe
+├── DC3WYPatch.dll
+├── DC3WYPatch.ini
+├── IconGroup103.ico
+├── scenario_titles.ini
+├── AdvData/
+└── id_Data/
+    └── MES/
+```
 
-1. Back up the game files that you will replace, including your current `DC3WYPatch.ini`.
-2. Extract `Released_patch.rar` into `<GAME_DIR>` so that `DC3WYLauncher.exe` and `DC3WYPatch.dll` are beside `DC3WY.EXE`.
-3. When updating, keep your customized INI or merge the new settings into it.
-4. Run `<GAME_DIR>\DC3WYLauncher.exe` to start the game with the patch.
-5. Press **F11** in-game to open **DC3WY Patch Settings**.
+Kedua RAR menyediakan tool dan runtime patch; naskah terjemahan dipasang terpisah. Launcher menyertakan Locale Emulator dan membuat `AdvData\Savegame` bila diperlukan. Gunakan launcher agar patch dimuat dengan benar.
 
-Launching `DC3WY.EXE` directly may not load the patch correctly. The custom
-launcher embeds Locale Emulator and creates `AdvData\Savegame` when needed.
+Folder source repositori boleh ditempatkan di mana saja. Paket patch juga tersedia di `DC3WYPatch a/build/Released` pada source.
 
-Translated MES files go in `<GAME_DIR>\id_Data\MES` for Indonesian or
-`<GAME_DIR>\eng_data\MES` for English. Select the corresponding language in
-the patch settings. Keep original Japanese MES files separately for importing.
+## Buka aplikasi
 
-## Word wrap and layout in v1.3
+Ekstrak `DC3WYMesTextTool_GUI.rar` ke folder pilihan Anda dan jalankan `DC3WYMesTextTool_GUI.exe`. Jika memakai source repositori, jalankan `bin\Release\net8.0-windows\DC3WYMesTextTool_GUI.exe`. Paket siap pakai berada di folder yang sama.
 
-- **Default: 46 half-width columns**, shared by single import, batch import,
-  and the GUI. ASCII and half-width kana count as one column; full-width
-  characters count as two. The adjustable range is **10–100**.
-- Dialogue and narration in story scripts named `wy_*.mes` wrap at word
-  boundaries. Long words can be split, and breaks avoid opening/closing
-  punctuation boundaries.
-- **Four lines is a recommendation.** Longer messages produce warnings;
-  text is not truncated or automatically split into separate dialogue pages.
-- Existing manual newlines are preserved. CRLF and legacy literal `\n`
-  are normalized, and repeated import does not keep adding line breaks.
-- Nameplates, choices, auxiliary slots, and menu scripts such as `sce_*.mes`
-  and `music.mes` are not automatically wrapped.
-- Native ruby and font/color effects keep their native layout and are flagged
-  for manual review in-game.
-- Every successful import writes `<output.mes>.layout.json`, with the
-  one-based JSON entry and MES slot associated with each warning.
-- Export displays encrypted underscore placeholders as spaces. Import
-  restores the underscores required by the encrypted MES format.
-- Empty text, NUL, unsupported Shift-JIS characters, slot-count mismatches,
-  and encoded text bodies above 259 bytes fail validation before a new MES is written.
+Aplikasi membutuhkan **.NET 8 Desktop Runtime untuk Windows**. Simpan EXE, DLL, `.deps.json`, dan `.runtimeconfig.json` dalam satu folder. Judul jendelanya adalah **Da Capo 3 With You - MES Text Tool**.
 
-The supplied patch configuration uses `DialogueLineSpacing=-10` and
-`BacklogLineSpacing=-10`, giving normal body text a **24px line pitch**.
-The DLL and INI control spacing; the converter only changes text and newlines.
-Ruby and large-font text retain native spacing. If you keep an older INI,
-merge these spacing values to use the current layout. Review dialogue and
-backlog in-game, especially after increasing width or keeping manual line breaks.
+## Single File
 
-## JSON format
+**MES → JSON (exporter)**
 
-Export produces UTF-8 JSON, grouping a nameplate and its following dialogue:
+1. Isi **Input MES/JSON** dengan MES asli.
+2. Isi **Output**, atau kosongkan untuk membuat JSON di sebelah input.
+3. Klik **Export (MES -> JSON)** dan periksa log.
+
+Hasil ekspor menggabungkan nama karakter dan dialog berdasarkan opcode DC3WY:
 
 ```json
 [
-  { "name": "Kiyotaka", "message": "Dialogue text." },
-  { "message": "Narration text." }
+  { "message": "Narasi." },
+  { "name": "Kiyotaka", "message": "「Dialog karakter.」" }
 ]
 ```
 
-MES opcode roles determine grouping, rather than quotation marks. Import
-supports both this grouped format and the older flat format in which names
-and dialogue are separate `{ "message": "..." }` entries. Expanded text-slot
-counts must match the original MES, preventing translations from shifting
-into the wrong dialogue or nameplate slots.
+Single File, Batch, dan CLI menggunakan format gabungan tersebut. Pengelompokan mengikuti posisi nama/dialog dalam MES, bukan tanda kutip. Ekspor tidak menerjemahkan nama. Placeholder underscore pada teks terenkripsi ditampilkan sebagai spasi dan dipulihkan saat impor.
 
-## Quick start: GUI
+**JSON → MES (importer)**
 
-Open `<TOOL_DIR>\DC3WYMesTextTool_GUI.exe`. The window title is
-**Da Capo 3 With You - MES Text Tool**.
+1. Isi **Input MES/JSON** dengan JSON terjemahan.
+2. Letakkan **MES Jepang asli** untuk skenario yang sama di sebelah JSON, dengan nama dasar yang sama: `wy_scene.json` memakai `wy_scene.mes`.
+3. Tentukan file **Output** yang berbeda dari MES asli. Jika kosong, GUI membuat `new_<nama MES asli>` di folder template.
+4. Pilih **Word Wrap**: default `46` pada Single File, Batch, dan CLI; rentang yang didukung **10–100 kolom setengah lebar**.
+5. Klik **Import (JSON -> MES)**, lalu periksa log dan laporan `<output.mes>.layout.json`.
 
-### Single file export
+GUI Single File mencari template di sebelah JSON. Untuk menyimpan template di folder lain, gunakan Batch atau CLI yang menyediakan argumen folder/path MES asli.
 
-1. Select the `Single File` tab.
-2. In `Input MES/JSON`, select a `.mes` file.
-3. Set `Output` to a `.json` path, or leave it empty to use the input filename with a `.json` extension.
-4. Click `Export (MES -> JSON)` and check the log.
+Importer menerima JSON gabungan dan format lama yang memisahkan nama serta dialog menjadi entri `message`. Jumlah slot teks setelah JSON diperluas harus sama dengan MES asli; jangan menambah, menghapus, atau mengubah urutan entri. Template asli dibutuhkan karena JSON tidak memuat seluruh instruksi, label, aset, dan alur skenario.
 
-### Single file import
+## Batch
 
-1. Select the translated `.json` in `Input MES/JSON`.
-2. Put the matching **original Japanese MES**, with the same base filename, beside that JSON. The GUI uses it as the import template.
-3. Set `Output` to a new `.mes` path.
-4. Set `Word Wrap` to `46` unless you have checked another width in-game.
-5. Click `Import (JSON -> MES)`, then review the log and `.mes.layout.json` report.
+- **Export:** isi **MES Folder** dan **Output Folder**, lalu klik **Batch Export**.
+- **Import:** isi **JSON Folder**, **MES Folder** asli, dan **Output Folder** yang berbeda, lalu klik **Batch Import**.
+- Nama file harus sama: `wy_scene.json` memakai template `wy_scene.mes`.
+- Pilih wrap `46` sebagai titik awal, lalu periksa log dan laporan layout setiap hasil impor.
+- Template yang hilang dilaporkan dan dilewati. Periksa seluruh log untuk mengetahui file yang belum berhasil diproses.
 
-### Batch conversion
+## Layout dan ikon backlog
 
-Use the `Batch` tab. For export, select the MES input folder in the MES folder
-field. For import, select the translated JSON folder and the original
-MES folder. Choose an output folder, set the wrap width, and run the conversion.
-Files are matched by base filename, for example `wy_scene.json` and `wy_scene.mes`.
-Missing original MES files are reported and skipped; check the log for failures.
+Word wrap diterapkan pada dialog/narasi biasa di script cerita `wy_*.mes`. Nama karakter, pilihan, slot tambahan, dan script menu seperti `sce_*.mes` serta `music.mes` tidak dibungkus otomatis. Ruby dan efek font/warna mempertahankan layout native dan ditandai untuk ditinjau di game.
 
-## CLI tutorial
+Wrap memakai satu kolom untuk ASCII/katakana setengah lebar dan dua kolom untuk karakter lebar penuh. Pemisah baris manual dipertahankan; CRLF dan bentuk literal `\n` dinormalisasi. Kata yang lebih panjang dari batas dapat dipotong, dengan penyesuaian posisi tanda baca.
 
-Open PowerShell in `<TOOL_DIR>`. The sample folders `original_mes`, `json`,
-`mes_output`, and `json_grouped` below are relative to that working directory;
-replace them and `wy_scene` with your own folder and file names. Use untouched
-Japanese MES files in `original_mes` as the opcode/nameplate templates.
-Create the `json` folder before using single-file export; batch export creates
-its output folder automatically.
+**Empat baris adalah rekomendasi.** Pesan yang lebih panjang dicatat dalam laporan `.mes.layout.json`, lengkap dengan nomor entri JSON dan slot MES mulai dari 1. Teks tidak dipotong atau dibagi otomatis menjadi halaman dialog baru. Laporan tetap ditulis saat tidak ada peringatan.
 
-### Export one file
+**Jarak vertikal dan pemilihan gambar ikon ditangani `DC3WYPatch.dll` saat runtime.** Importer mengatur teks dan pemisah baris. Petunjuk teknis tersedia di [README patch](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/blob/main/DC3WYPatch%20a/README.md).
 
-```powershell
-.\DC3WYMesTextTool_GUI.exe export ".\original_mes\wy_scene.mes" ".\json\wy_scene.json"
-```
+Paket patch memakai `DialogueLineSpacing=-10`, `BacklogLineSpacing=-10`, dan `ShowBacklogIcon=1`. Pitch teks normal adalah **24 px**, sehingga empat baris berada pada `[0, 24, 48, 72]` px. Lookup ikon mendukung **25 alias nama terjemahan**, termasuk bentuk underscore yang ditangani patch. Ruby dan font besar mempertahankan jarak native.
 
-If output is omitted, it defaults to the input filename with a `.json` extension.
+Wrap `46` mengatur lebar teks saat impor; spacing DLL mengatur jarak vertikal saat game berjalan. Wrap tidak menjamin semua pesan muat dalam empat baris. Jika mempertahankan INI lama, gabungkan nilai spacing di atas. Periksa dialog dan backlog setelah impor, terutama bila mengubah lebar atau mempertahankan banyak pemisah baris manual.
 
-### Import one file
+## Validasi dan encoding
+
+- Converter hanya menerima MES DC3WY versi `0xA09F`.
+- Jumlah slot JSON harus sesuai dengan template MES. Pengelompokan nama/dialog mengikuti peran opcode asli.
+- Teks kosong, hanya berisi spasi, NUL, dan karakter yang tidak dapat dienkode ke Shift-JIS/CP932 ditolak sebelum MES baru ditulis.
+- Isi dialog dibatasi **259 byte setelah encoding**, mengikuti batas buffer renderer DC3WY. Pendekkan terjemahan jika batas ini terlampaui.
+- Karakter yang tidak didukung menghasilkan error, bukan penggantian diam-diam menjadi `?`.
+
+## CLI
+
+Dari folder executable, gunakan contoh berikut. Ganti nama file/folder dengan milik Anda; buat folder `json` sebelum ekspor satu file.
 
 ```powershell
-.\DC3WYMesTextTool_GUI.exe import ".\json\wy_scene.json" ".\original_mes\wy_scene.mes" ".\mes_output\wy_scene.mes" -w 46
+.\DC3WYMesTextTool_GUI.exe export "original_mes\wy_scene.mes" "json\wy_scene.json"
+.\DC3WYMesTextTool_GUI.exe import "json\wy_scene.json" "original_mes\wy_scene.mes" "mes_output\wy_scene.mes" -w 46
+.\DC3WYMesTextTool_GUI.exe batch-export "original_mes" "json"
+.\DC3WYMesTextTool_GUI.exe batch-import "json" "original_mes" "mes_output" -w 46
 ```
 
-The original MES argument is required. Output defaults to `output_<original filename>`
-beside the original MES when omitted. `-w` is optional and defaults to `46`.
+`-w` bersifat opsional dan default-nya `46`, dengan rentang **10–100**. Jika output dihilangkan, ekspor satu file menulis JSON di sebelah input; impor CLI menulis `output_<nama MES asli>` di sebelah template. Default folder batch adalah `json_output` di folder MES input untuk ekspor, atau `mes_output` di folder MES asli untuk impor.
 
-### Batch export
+Untuk merapikan JSON lama menjadi format nama/dialog gabungan, gunakan MES Jepang asli sebagai acuan:
 
 ```powershell
-.\DC3WYMesTextTool_GUI.exe batch-export ".\original_mes" ".\json"
+.\DC3WYMesTextTool_GUI.exe structure-json "json\wy_scene.json" "original_mes\wy_scene.mes" "json_grouped\wy_scene.json"
+.\DC3WYMesTextTool_GUI.exe batch-structure-json "json" "original_mes" "json_grouped"
 ```
 
-The default output folder is `json_output` inside the input MES folder.
+Kedua perintah mempertahankan urutan slot teks dan menolak jumlah slot yang tidak sesuai. **Jika output tidak diberikan, JSON input diperbarui langsung.** Gunakan folder output terpisah untuk menyimpan salinan awal.
 
-### Batch import
+Drag-and-drop MES ke EXE mengekspor JSON di sebelahnya. Drop folder berisi MES mengekspor ke subfolder `json_output`.
 
-```powershell
-.\DC3WYMesTextTool_GUI.exe batch-import ".\json" ".\original_mes" ".\mes_output" -w 46
-```
+## Hasil verifikasi
 
-The default output folder is `mes_output` inside the original MES folder.
-Review each output's layout report before copying rebuilt MES files into
-your selected translation folder under `<GAME_DIR>`.
+Build dan paket biner yang dipakai dokumentasi ini sebelumnya telah diperiksa:
 
-### Restructure existing translation JSON
+- Build .NET Release berhasil tanpa warning/error; build patch dan launcher x86 Release berhasil.
+- Satu skenario dengan 93 entri lulus ekspor → impor → ekspor ulang → impor ulang, termasuk pengelompokan nama, laporan layout, dan hasil impor berulang yang identik secara byte.
+- Hook DLL lulus 56 kasus jarak baris dan pemeriksaan 161 nama dari JSON dengan 25 alias yang didukung, termasuk preservasi register/stack.
 
-Convert legacy flat entries into grouped name/message entries using the
-matching Japanese MES as the authoritative slot map:
+Pembaruan dokumentasi ini mempertahankan biner tersebut. Angka di atas berasal dari verifikasi sebelumnya; perubahan README tidak mencakup pengujian game interaktif baru.
 
-```powershell
-.\DC3WYMesTextTool_GUI.exe structure-json ".\json\wy_scene.json" ".\original_mes\wy_scene.mes" ".\json_grouped\wy_scene.json"
-.\DC3WYMesTextTool_GUI.exe batch-structure-json ".\json" ".\original_mes" ".\json_grouped"
-```
+## Build dan uji
 
-These commands preserve the expanded text-slot sequence and reject mismatched
-slot counts. Omitting the output path/folder updates the input JSON in place.
-
-## Drag and drop
-
-- Drop a `.mes` file onto the converter EXE to export a `.json` beside it.
-- Drop a folder onto the EXE to batch-export MES files into its `json_output` subfolder.
-
-## Build from source
-
-Clone with submodules so the patch's Detours dependency is available:
+Clone dengan submodule agar dependency Detours tersedia:
 
 ```powershell
 git clone --recurse-submodules https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch.git
 ```
 
-From `<REPO_DIR>`, build the GUI/CLI with the .NET 8 SDK:
+Dari folder source proyek, jalankan:
 
 ```powershell
 dotnet build DC3WYMesTextTool_GUI.csproj -c Release
-```
-
-For the patch, install Visual Studio 2022 with Desktop development with C++,
-a Windows SDK, and CMake. From `<REPO_DIR>`, run:
-
-```powershell
 & ".\DC3WYPatch a\build_dc3wy_win32.bat"
 ```
 
-The launcher uses the Locale Emulator files in `DC3WYPatch a/src/le_bin`.
-See [patch build and verification notes](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/blob/main/DC3WYPatch%20a/README.md).
+Build GUI membutuhkan **.NET 8 SDK**. Build patch membutuhkan **Visual Studio 2022 dengan Desktop development with C++**, Windows SDK, CMake, Detours, dan berkas Locale Emulator di `DC3WYPatch a/src/le_bin`.
 
-| Output | Path relative to `<REPO_DIR>` |
+| Hasil | Lokasi relatif terhadap folder source |
 | --- | --- |
-| GUI/CLI executable | `bin/Release/net8.0-windows/DC3WYMesTextTool_GUI.exe` |
-| Tool package | `bin/Release/net8.0-windows/DC3WYMesTextTool_GUI.rar` |
-| Patch build | `DC3WYPatch a/build_dc3wy_win32/Release` |
-| Ready-to-use patch files | `DC3WYPatch a/build/Released` |
-| Patch package | `DC3WYPatch a/build/Released/Released_patch.rar` |
+| GUI/CLI dan paket tool | `bin/Release/net8.0-windows` |
+| Build DLL/launcher | `DC3WYPatch a/build_dc3wy_win32/Release` |
+| Berkas patch siap pakai dan RAR | `DC3WYPatch a/build/Released` |
 
-Build commands update binaries; repack the RAR packages separately after a
-build. Generated caches, temporary build files, and Python virtual environments
-are excluded from version control.
+Skrip build menyalin DLL dan launcher ke `build/Released` serta mempertahankan INI yang ada. RAR perlu dikemas ulang secara terpisah setelah build. Petunjuk verifier hook ada di [README patch](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/blob/main/DC3WYPatch%20a/README.md); data audit terjemahan disediakan terpisah.
 
-## Troubleshooting
+## Pemecahan masalah
 
-- **Missing original MES:** use the matching original Japanese file, with the same base filename as the JSON.
-- **Text does not fit:** inspect `.mes.layout.json`, shorten translations or adjust manual newlines, then check dialogue and backlog in-game.
-- **Converter will not start:** install the .NET 8 Desktop Runtime and extract all converter companion files together.
-- **Patch does not load:** run `DC3WYLauncher.exe` from `<GAME_DIR>` and keep the patch DLL beside it.
-- **No output:** check the conversion log, output-folder permissions, and validation errors.
+- **MES asli tidak ditemukan:** pastikan nama dasarnya sama dengan JSON. Pada Single File, letakkan keduanya dalam satu folder.
+- **Teks tidak muat:** periksa `.mes.layout.json`, pendekkan terjemahan atau atur pemisah baris, lalu periksa dialog dan backlog di game.
+- **Aplikasi tidak terbuka:** pasang .NET 8 Desktop Runtime dan ekstrak seluruh berkas pendamping tool bersama-sama.
+- **Patch tidak dimuat:** jalankan `DC3WYLauncher.exe` dari `<GAME_DIR>` dan pastikan DLL berada di sebelahnya.
+- **Tidak ada output:** periksa log, izin folder output, dan pesan validasi.
 
-Detours, Locale Emulator, and the retained MesTextTool reference source have
-their own licenses in their respective directories.
+Detours, Locale Emulator, dan source referensi MesTextTool memiliki lisensi masing-masing di direktorinya.
