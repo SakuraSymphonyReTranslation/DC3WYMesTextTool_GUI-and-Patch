@@ -159,7 +159,6 @@ Building the GUI requires the **.NET 8 SDK**. Building the patch requires **Visu
 | Output | Path relative to the source folder |
 | --- | --- |
 | GUI/CLI and tool package | `bin/Release/net8.0-windows` |
-| DLL/launcher build | `DC3WYPatch a/build_dc3wy_win32/Release` |
 | Ready-to-use patch files and RAR | `DC3WYPatch a/build/Released` |
 
 The build script copies the DLL and launcher into `build/Released` and preserves the existing INI. Repack the RAR archives separately after building. Hook verifier instructions are in the [English patch README](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/blob/main/DC3WYPatch%20a/Readme_en.md); translation audit data is supplied separately.

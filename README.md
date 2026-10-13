@@ -159,7 +159,6 @@ Build GUI membutuhkan **.NET 8 SDK**. Build patch membutuhkan **Visual Studio 20
 | Hasil | Lokasi relatif terhadap folder source |
 | --- | --- |
 | GUI/CLI dan paket tool | `bin/Release/net8.0-windows` |
-| Build DLL/launcher | `DC3WYPatch a/build_dc3wy_win32/Release` |
 | Berkas patch siap pakai dan RAR | `DC3WYPatch a/build/Released` |
 
 Skrip build menyalin DLL dan launcher ke `build/Released` serta mempertahankan INI yang ada. RAR perlu dikemas ulang secara terpisah setelah build. Petunjuk verifier hook ada di [README patch](https://github.com/SakuraSymphonyReTranslation/DC3WYMesTextTool_GUI-and-Patch/blob/main/DC3WYPatch%20a/README.md); data audit terjemahan disediakan terpisah.
